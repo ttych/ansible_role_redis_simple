@@ -1,0 +1,8 @@
+---
+
+- name: install required packages
+  include: install_packages.yml
+  vars: {
+    packages: "{{ redis_required_packages }}",
+    services: []
+  }

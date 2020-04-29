@@ -1,2 +1,82 @@
 ---
-# defaults file for ansible_role_redis_simple
+
+want_redis_simple: no
+
+redis_required_packages:
+  - apg
+
+redis_user: redis
+redis_group: redis
+
+redis_users:
+  - name: "{{ redis_user }}"
+    comment: "{{ redis_user }}"
+    group: "{{ redis_group }}"
+    groups:
+    home: "{{ redis_home }}"
+    shell: /bin/sh
+    uid: 3204
+    home_mode: '0700'
+    password: '*'
+
+redis_groups:
+  - { name: "{{ redis_group }}", gid: 3204 }
+
+redis_dir: "{{ service_dir|d('/home') }}/redis"
+redis_home: "{{ redis_dir }}"
+redis_distfiles: "{{ redis_dir }}/distfiles"
+redis_data: "{{ redis_dir }}/data"
+redis_etc: "{{ redis_dir }}/etc"
+redis_var: "{{ redis_dir }}/var"
+redis_run: "{{ redis_var }}/run"
+redis_log: "{{ redis_var }}/log"
+redis_app: "{{ redis_dir }}/app"
+redis_app_current: "{{ redis_app }}/redis"
+redis_tmp: "{{ redis_dir }}/tmp"
+redis_conf: "{{ redis_etc }}/redis.conf"
+redis_passwd_save: "{{ redis_etc }}/redis_passwd_save"
+redis_pid: "{{ redis_run }}/redis.pid"
+redis_log_file: "{{ redis_log }}/redis.log"
+
+redis_workspace:
+  - path: "{{ redis_home }}"
+    owner: "{{ redis_user }}"
+    group: "{{ redis_group }}"
+    mode: "0700"
+  - path: "{{ redis_distfiles }}"
+    owner: "{{ redis_user }}"
+    group: "{{ redis_group }}"
+    mode: "0755"
+  - path: "{{ redis_data }}"
+    owner: "{{ redis_user }}"
+    group: "{{ redis_group }}"
+    mode: "0700"
+  - path: "{{ redis_etc }}"
+    owner: "{{ redis_user }}"
+    group: "{{ redis_group }}"
+    mode: "0700"
+  - path: "{{ redis_var }}"
+    owner: "{{ redis_user }}"
+    group: "{{ redis_group }}"
+    mode: "0755"
+  - path: "{{ redis_run }}"
+    owner: "{{ redis_user }}"
+    group: "{{ redis_group }}"
+    mode: "0755"
+  - path: "{{ redis_log }}"
+    owner: "{{ redis_user }}"
+    group: "{{ redis_group }}"
+    mode: "0755"
+  - path: "{{ redis_app }}"
+    owner: "{{ redis_user }}"
+    group: "{{ redis_group }}"
+    mode: "0755"
+  - path: "{{ redis_tmp }}"
+    owner: "{{ redis_user }}"
+    group: "{{ redis_group }}"
+    mode: "0700"
+
+redis_version: 5.0.8
+redis_release: "redis-{{ redis_version }}"
+redis_archive: "{{ redis_release }}.tar.gz"
+redis_url: "http://download.redis.io/releases/{{ redis_archive }}"

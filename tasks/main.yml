@@ -1,2 +1,22 @@
 ---
-# tasks file for ansible_role_redis_simple
+
+- block:
+    - include: context.yml
+
+    - include: accounts.yml
+      vars: {
+        accounts_groups: "{{ redis_groups }}",
+        accounts_users: "{{ redis_users }}"
+      }
+
+    - include: workspace.yml
+
+    - include: install_requirements.yml
+
+    - include: install_redis.yml
+
+    - include: configure_redis.yml
+
+    - include: redis_service.yml
+
+  when: want_redis_simple

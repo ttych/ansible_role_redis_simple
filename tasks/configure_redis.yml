@@ -1,0 +1,44 @@
+---
+
+# - name: deploy redis.conf
+#   template:
+#     src: redis/redis.conf
+#     dest: "{{ gitlab_redis_conf }}"
+#     owner: "{{ gitlab_user }}"
+#     group: "{{ gitlab_group }}"
+#     mode: "0640"
+
+# - name: setup daemontools for redis
+#   block:
+#     - name: create redis daemontools workspace
+#       file:
+#         path: "{{ gitlab_daemontools_dir }}/redis/{{ item.path }}"
+#         owner: "{{ item.owner }}"
+#         group: "{{ item.group }}"
+#         mode: "{{ item.mode }}"
+#         state: directory
+#       loop: "{{ gitlab_daemontools_directories_template }}"
+
+#     - name: deploy redis daemontools run scripts
+#       template:
+#         src: "svscan/redis/{{ item.path }}"
+#         dest: "{{ gitlab_daemontools_dir }}/redis/{{ item.path }}"
+#         owner: "{{ item.owner }}"
+#         group: "{{ item.group }}"
+#         mode: "{{ item.mode }}"
+#       loop: "{{ gitlab_daemontools_scripts_template }}"
+
+#     - name: link as gitlab_redis daemontools service
+#       file:
+#         src: "{{ gitlab_daemontools_dir }}/redis"
+#         dest: "{{ daemontools_svscan_dir }}/gitlab_redis"
+#         state: link
+
+#   when: has_daemontools|d(false)
+
+
+# - name: setup standard system service for redis
+#   fail:
+#     msg: "not implemented"
+
+#   when: not has_daemontools|d(false)

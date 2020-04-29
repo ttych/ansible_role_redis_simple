@@ -1,0 +1,68 @@
+---
+
+- name: check redis install
+  stat:
+    path: "{{ redis_app }}/{{ redis_release }}/bin/redis-server"
+  register: t_redis_installed
+
+- name: "set install redis flag to {{ not t_redis_installed.stat.exists }}"
+  set_fact:
+    t_redis_install: "{{ not t_redis_installed.stat.exists }}"
+
+- name: check redis version
+  block:
+    - name: get redis version
+      shell: "{{ redis_app }}/{{ redis_release }}/bin/redis-server --version | cut -d ' ' -f3 | cut -d = -f 2"
+      changed_when: no
+      register: t_redis_version
+
+    - debug:
+        msg: "{{ t_redis_version }}"
+
+    - name: set t_redis_version_valid flag
+      set_fact:
+        t_redis_version_valid: "{{ t_redis_version.stdout is version(redis_version, '>=') }}"
+
+    - name: "set install redis to {{ not t_redis_version_valid }}"
+      set_fact:
+        t_redis_install: "{{ not t_redis_version_valid }}"
+
+  when: t_redis_installed.stat.exists
+
+- name: "install redis {{ redis_version }}"
+  block:
+    - name: "download redis {{ redis_version }}"
+      get_url:
+        url: "{{ redis_url }}"
+        dest: "{{ redis_distfiles }}/{{ redis_archive }}"
+        mode: "0644"
+
+    - name: extract archive
+      unarchive:
+        remote_src: yes
+        src: "{{ redis_distfiles }}/{{ redis_archive }}"
+        dest: "{{ redis_tmp }}"
+        mode: "go-w"
+
+    - name: "install to {{ redis_app }}/{{ redis_release }}"
+      shell: "(cd deps && gmake -j {{ ansible_processor_vcpus|d(ansible_processor_count) }} hiredis  jemalloc linenoise lua) && gmake -j {{ ansible_processor_vcpus|d(ansible_processor_count) }} && gmake install PREFIX={{ redis_app }}/{{ redis_release }}"
+      args:
+        chdir: "{{ redis_tmp }}/{{ redis_release }}"
+
+    - name: clean build directory
+      file:
+        path: "{{ redis_tmp }}/{{ redis_release }}"
+        state: absent
+
+  become: yes
+  become_user: "{{ redis_user }}"
+  when: t_redis_install
+
+- name: "link this release"
+  file:
+    src: "{{ redis_app }}/{{ redis_release }}"
+    dest: "{{ redis_app_current }}"
+    force: yes
+    state: link
+    owner: "{{ redis_user }}"
+    group: "{{ redis_group }}"
