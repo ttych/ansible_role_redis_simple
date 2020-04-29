@@ -34,7 +34,7 @@ redis_app: "{{ redis_dir }}/app"
 redis_app_current: "{{ redis_app }}/redis"
 redis_tmp: "{{ redis_dir }}/tmp"
 redis_conf: "{{ redis_etc }}/redis.conf"
-redis_passwd_save: "{{ redis_etc }}/redis_passwd_save"
+redis_password_save: "{{ redis_etc }}/redis_password_save"
 redis_pid: "{{ redis_run }}/redis.pid"
 redis_log_file: "{{ redis_log }}/redis.log"
 
