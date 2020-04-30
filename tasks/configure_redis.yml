@@ -50,3 +50,4 @@
     owner: "{{ redis_user }}"
     group: "{{ redis_group }}"
     mode: "0600"
+  register: t_redis_conf_deploy

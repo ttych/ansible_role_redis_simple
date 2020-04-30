@@ -31,8 +31,26 @@
 
 - name: setup systemd system service for redis
   block:
-    - fail:
-        msg: "not implemented"
+    - name: deploy redis service
+      template:
+        src: "systemd/{{ redis_service }}"
+        dest: "{{ systemd_service_lib}}/{{ redis_service }}"
+        owner: root
+        group: root
+        mode: "0644"
+      register: t_redis_service_deploy
+
+    - name: enable redis service
+      service:
+        name: "{{ redis_service }}"
+        enabled: yes
+        state: started
+
+    - name: restart redis service on change
+      service:
+        name: "{{ redis_service }}"
+        state: restarted
+      when: t_redis_conf_deploy.changed or t_redis_service_deploy.changed
 
   when:
     - not has_daemontools|d(false)
