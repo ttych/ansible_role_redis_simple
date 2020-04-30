@@ -80,3 +80,11 @@ redis_version: 5.0.8
 redis_release: "redis-{{ redis_version }}"
 redis_archive: "{{ redis_release }}.tar.gz"
 redis_url: "http://download.redis.io/releases/{{ redis_archive }}"
+
+redis_service: redis_simple.service
+systemd_service_lib: /lib/systemd/system
+
+redis_port: 6379
+redis_bind: 0.0.0.0
+redis_databases: 16
+redis_maxmemory: 100mb
