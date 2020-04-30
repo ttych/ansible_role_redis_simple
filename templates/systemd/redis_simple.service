@@ -2,17 +2,16 @@
 Description=Redis simple service
 
 [Service]
+ExecStart={{ redis_app_current }}/bin/redis-server {{ redis_conf }} --supervised systemd
+ExecStop=/bin/kill -s TERM $MAINPID
+PIDFile={{ redis_pid }}
+TimeoutStopSec=2
+Restart=always
 User={{ redis_user }}
 Group={{ redis_group }}
 
 UMask=0077
-
-LimitNOFILE=20000
-
-ExecStart={{ redis_app_current }}/bin/redis-server {{ redis_conf }} --supervised systemd
-Restart=always
-
-TimeoutStopSec=5
+LimitNOFILE=65535
 
 [Install]
 WantedBy=multi-user.target
