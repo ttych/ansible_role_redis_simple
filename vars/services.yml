@@ -1,0 +1,3 @@
+---
+redis_dir: "{{ services_dir }}/redis_simple"
+redis_home: "{{ redis_dir }}/redis"

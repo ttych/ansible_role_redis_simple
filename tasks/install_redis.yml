@@ -45,7 +45,7 @@
         mode: "go-w"
 
     - name: "install to {{ redis_app }}/{{ redis_release }}"
-      shell: "(cd deps && gmake -j {{ ansible_processor_vcpus|d(ansible_processor_count) }} hiredis  jemalloc linenoise lua) && gmake -j {{ ansible_processor_vcpus|d(ansible_processor_count) }} && gmake install PREFIX={{ redis_app }}/{{ redis_release }}"
+      shell: "(cd deps && {{ redis_make }} -j {{ ansible_processor_vcpus|d(ansible_processor_count) }} hiredis  jemalloc linenoise lua) && {{ redis_make }} -j {{ ansible_processor_vcpus|d(ansible_processor_count) }} && {{ redis_make }} install PREFIX={{ redis_app }}/{{ redis_release }}"
       args:
         chdir: "{{ redis_tmp }}/{{ redis_release }}"
 

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec setuidgid {{ redis_user }} multilog t ./main

@@ -1,32 +1,32 @@
 ---
 
-# - name: setup daemontools for redis
-#   block:
-#     - name: create redis daemontools workspace
-#       file:
-#         path: "{{ gitlab_daemontools_dir }}/redis/{{ item.path }}"
-#         owner: "{{ item.owner }}"
-#         group: "{{ item.group }}"
-#         mode: "{{ item.mode }}"
-#         state: directory
-#       loop: "{{ gitlab_daemontools_directories_template }}"
+- name: setup daemontools for redis
+  block:
+    - name: create redis daemontools workspace
+      file:
+        path: "{{ redis_daemontools_dir }}/{{ item.path }}"
+        owner: "{{ item.owner }}"
+        group: "{{ item.group }}"
+        mode: "{{ item.mode }}"
+        state: directory
+      loop: "{{ redis_daemontools_directories_template }}"
 
-#     - name: deploy redis daemontools run scripts
-#       template:
-#         src: "svscan/redis/{{ item.path }}"
-#         dest: "{{ gitlab_daemontools_dir }}/redis/{{ item.path }}"
-#         owner: "{{ item.owner }}"
-#         group: "{{ item.group }}"
-#         mode: "{{ item.mode }}"
-#       loop: "{{ gitlab_daemontools_scripts_template }}"
+    - name: deploy redis daemontools run scripts
+      template:
+        src: "svscan/{{ item.path }}"
+        dest: "{{ redis_daemontools_dir }}/{{ item.path }}"
+        owner: "{{ item.owner }}"
+        group: "{{ item.group }}"
+        mode: "{{ item.mode }}"
+      loop: "{{ redis_daemontools_scripts_template }}"
 
-#     - name: link as gitlab_redis daemontools service
-#       file:
-#         src: "{{ gitlab_daemontools_dir }}/redis"
-#         dest: "{{ daemontools_svscan_dir }}/gitlab_redis"
-#         state: link
+    - name: link as redis_redis daemontools service
+      file:
+        src: "{{ redis_daemontools_dir }}"
+        dest: "{{ daemontools_svscan_dir }}/redis"
+        state: link
 
-#   when: has_daemontools|d(false)
+  when: has_daemontools|d(false)
 
 
 - name: setup systemd system service for redis

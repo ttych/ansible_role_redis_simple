@@ -3,3 +3,5 @@
 redis_required_packages:
   - apg
   - gmake
+
+redis_make: gmake
